@@ -23,7 +23,7 @@
 #' x <- simu_deaths(time,prob,n)
 #' 
 #' ## Simulating the original survival function.
-#' nrep <- 10000
+#' nrep <- 100
 #' y <- replicate(nrep,simu_deaths(time,prob,n)$Death)
 #' p <- sapply(0:99,function(i) sum(y==i))
 #' p <- p/max(p)
@@ -60,7 +60,7 @@ simu_deaths <- function(time,prob,n) {
     
   # It's more complicated when there are 0's and -1's.
   } else {
-    j <- j[j<length_time]
+    j <- j[j<=length_time]
     df <- data.frame(Death=c(rep(max(time),n0),time[j]),
                      Event=c(rep(FALSE,n0),rep(TRUE,length(j))))
   }
