@@ -16,19 +16,32 @@
 #' 
 #' @examples
 #'
-#' ##
+#' ## Simulating one random sample data from the survival function.
 #' time <- 0:100
 #' prob <- exp(-time*.05)
-#' n <- 120
+#' n <- 10
 #' x <- simu_deaths(time,prob,n)
 #' 
-#' ## Simulating the original survival function.
+#' ## Inverse approach: approximating the survival function from simulations.
+#' ## We build a more complicated survival function, one which is not sampled
+#' ## regularly and has flat parts.
+#' time <- c(1,3,4,8,9,12:17)
+#' prob <- c(1,1,1,.9,.8,.8,.7,.5,.2,.2,.2)
+#' n <- 10
 #' nrep <- 100
-#' y <- replicate(nrep,simu_deaths(time,prob,n)$Death)
-#' p <- sapply(0:99,function(i) sum(y==i))
-#' p <- p/max(p)
-#' plot(time[-100],p,xlab="Time",ylab="Survival")
+#' y <- NULL
+#' for (i in 1:nrep) {
+#' z <- simu_deaths(time,prob,n)
+#' y <- c(y,z$Death[z$Event==1])
+#' }
+#' p <- sapply(time,function(i) sum(y==i))
+#' p <- cumsum(p)
+#' r <- lm(prob~p)
+#' par(mfcol=c(2,1),mar=c(3,4,3,2))
+#' plot(time,predict(r),xlab="Time",ylab="Survival",ylim=c(0,1))
 #' points(time,prob,type="l",lwd=2)
+#' plot(time,prob-predict(r),xlab="Time",ylab="Differences")
+#' par(mfcol=c(1,1))
 #'
 #' @export
 # 
@@ -64,6 +77,8 @@ simu_deaths <- function(time,prob,n) {
     df <- data.frame(Death=c(rep(max(time),n0),time[j]),
                      Event=c(rep(FALSE,n0),rep(TRUE,length(j))))
   }
+  
+  if (sum(is.na(df))>0) browser()
 
   return(df)
 }
