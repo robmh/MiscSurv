@@ -77,8 +77,6 @@ simu_deaths <- function(time,prob,n) {
     df <- data.frame(Death=c(rep(max(time),n0),time[j]),
                      Event=c(rep(FALSE,n0),rep(TRUE,length(j))))
   }
-  
-  if (sum(is.na(df))>0) browser()
 
   return(df)
 }
