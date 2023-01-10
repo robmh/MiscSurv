@@ -1,6 +1,7 @@
 #' Simulation of survival data set
 #'
-#' It simulates one right-censored data set by randomly drawing n individuals from
+#' @description 
+#' It simulates a right-censored data set by randomly drawing n individuals from
 #' a given survival function.
 #'
 #' @param time time points at which survival is evaluated.
